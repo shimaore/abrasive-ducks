@@ -1,0 +1,22 @@
+{
+  "name": "abrasive-ducks",
+  "version": "1.0.0",
+  "description": "datastream server for CCNQ4",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/shimaore/abrasive-ducks"
+  },
+  "author": "Stéphane Alnet <stephane@shimaore.net> (https://stephane.shimaore.net/)",
+  "license": "Unlicense",
+  "dependencies": {
+    "most": "^1.7.2",
+    "windy-moon": "^4.3.0"
+  },
+  "devDependencies": {
+    "coffeescript": "^2.1.1"
+  }
+}

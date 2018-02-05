@@ -11,7 +11,7 @@ Inspired by https://gist.github.com/briancavalier/f26f95d5cff9ff4fda249822eb1282
 
 Emulate a row as reported with `include_docs`.
 
-          sink.event scheduler.now(), {id:@doc._id,key,value,doc}
+          sink.event scheduler.now(), {id:@doc._id,key,value,@doc}
         try
           map_function(emit) doc
         catch error

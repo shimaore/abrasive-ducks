@@ -1,13 +1,6 @@
 Subscription functions
 ----------------------
 
-    operation = (name) -> ({operation}) -> operation is name
-    Value = ({value}) -> value
-    Key = ({key}) -> key
-    is_string = (v) -> typeof v is 'string'
-    is_object = (v) -> typeof v is 'object'
-    not_null = (v) -> v?
-
     subscriptions_set = (source) ->
 
       subscriptions = new Set()
@@ -43,3 +36,8 @@ Subscription functions
             .map Key
             .filter not_null
             .filter (key) -> set.has key
+
+    module.exports = subcriptions_filterer
+
+    most = require 'most'
+    {operation,not_null,Key} = require './transducers'
