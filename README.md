@@ -6,8 +6,9 @@ This server intends to be a replacement for the `spicy-action` server and provid
 - A datastream from a client might suggest operations:
   - `UPDATE document(id,rev)`
   - `SUBSCRIBE TO document(key)`
+  - `UNSUBSCRIBE FROM document(key)`
 - A datastream from the server provides `document(id,rev,fields)`.
-- The concept of `document` is very large and encloses:
+- The concept of `document` is very wide and encloses:
   - documents in the CouchDB sense (which might be stored in CouchDB or not)
   - notification documents (such as those sent by huge-play, ccnq4-opensips, …)
   - operational documents (such as those received and sent by huge-play to trigger calls, …)
@@ -37,12 +38,12 @@ Therefor we need to specify operational semantics rather than data. This means f
   - splice from array (using index)
   - remove from object (using key)
 
-Notice: values are JSON values (string, number, object, array, `true`, `false`, `null`) and binary/blob for some fields.
+Notice: values are JSON values (string, number, object, array, `true`, `false`, `null`).
 
 So basically we're looking for some kind of language to use to specifiy those operations and combine them (imperatively and in a way that can be parsed by the `client_policy` code easily).
 
 Some references: [JSONpath](https://www.npmjs.com/package/jsonpath), [JSONata](http://docs.jsonata.org/programming.html)
-But both offer something much closer to Turing-complete, which means it can't be analyzed by a policy.
+But both offer something much closer to Turing-complete, which means the descriptions can't be analyzed by a security policy.
 
 Maybe something along the lines of (again) `flat-ornaments`, with operations:
 
