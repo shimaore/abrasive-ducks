@@ -65,6 +65,30 @@ In that later sense the permissions are modifiers over operations sets as define
 
 For example, if a user (actually a group) is granted permission to know whether/when an endpoint is registered, the permission should allow them to receive the messages, but with all data provided by ccnq4-opensips replaced with the single field `registered` (a boolean). Another permission (more inclusive, more permissive, providing more information) would allow to also know the user-agents; another one would also allow to know the IP addresses the registrations were received from; etc.
 
+For example:
+
+    registered = (context,stream) ->
+      stream
+      .filter message_is_from_backend
+      .filter message_id_is_endpoint
+      .filter user_vs_document
+      .filter message_is_registration_response
+      .map (msg) ->
+        id: msg.id
+        rev: msg.rev
+        doc:
+          registered: msg.registered
+
+    registered_count = (context,stream) ->
+      stream
+      .filter … # same as above
+      .map (msg) ->
+        id: msg.id
+        rev: msg.rev
+        doc:
+          registered: msg.doc.registered
+          register_count: msg.doc.registrations.length # number of individual registrations for this endpoint
+
 So the problematic is:
 - given a set of "permissions functions" such as this one, how do we send the messages through them in order to obtain a consistent whole? (probably the best way is to have the functions "build" the resulting document by adding "operations" in its set of operations, the operation set being empty at the beginning)
 - 
@@ -104,8 +128,3 @@ To map to the [ABAC: Attribute-based access control](https://en.wikipedia.org/wi
 - contextual attributes
 
 However remember we are _not_ implementing ABAC, but a larger policy structure that allows for modification of messages as they go through.
-
-
-
-User → Group
-Group x Documents → Operations

@@ -31,13 +31,14 @@ Subscription functions
 
       subscriptions_set source
       .map (set) ->
+        console.log 'subscription: create filtered stream', set
         (stream) ->
+          console.log 'subscription: build stream', set, stream.__name ? stream
           stream
-            .map Key
-            .filter not_null
-            .filter (key) -> set.has key
+          .filter ({key}) -> key? and set.has key
+          .multicast()
 
-    module.exports = subcriptions_filterer
+    module.exports = subscriptions_filterer
 
     most = require 'most'
     {operation,not_null,Key} = require './transducers'

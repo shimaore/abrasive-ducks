@@ -20,6 +20,22 @@ This server intends to be a replacement for the `spicy-action` server and provid
   - providing a transform (`.map`,`.filter`) for streams coming from a client, before they are submitted to back-ends;
   - providing a transform (`.map`,`.filter`) for streams coming from the back-ends, before they are sent to the client.
 
+Message format
+--------------
+
+The message format is built so that data coming from CouchDB views can be easily exported.
+
+- `.operation` — `update`, `subscribe`, `unsubscribe`
+- `.key` — (required for `subscribe`, `unsubscribe`) the filtering key
+- `.id` (required) — document unique ID, in the form `<type>:<key>`, where `type` must be one of the predefined types
+- `.rev` (required) — document sequence; treated essentially as opaque, allows recipients to keep track of the last (or last N) revisions for a document and know this one is different
+- `.doc` — content / set of basic `set` operations
+- `.operations` — operations on the existing revision of a document (only in `UPDATE` messages coming from a client)
+
+Other fields might be defined, although best practices would suggest any `.id`-related field be provided in the `.doc` object. (In other words, fields at the root of the message object should be metadata about the message itself, while payload content is carried in `.doc` in most cases, except for complex transformations carried in `.operations`.)
+
+(In NodeRED for example the `.doc` convention is equivalent to the `.payload` convention. `.doc` is kept because of the CouchDB background but could easily be translated into `.payload` at the boundaries of a NodeRED system.)
+
 Update operations
 -----------------
 
