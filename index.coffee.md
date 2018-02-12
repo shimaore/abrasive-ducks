@@ -77,7 +77,7 @@ The `client_subscriptions` stream is built from the (authorized) subscriptions r
 It contains filtering functions that reflect the state of subscriptions at the time they are emitted.
 
         client_subscriptions = client_authorized_source
-          .thru subscriptions_filterer 
+          .thru subscriptions_filterer
 
 `client_policy` is a stream of policy functions (for the given client)
 `client_subscriptions` is a stream of subscription functions, which is mapped to a stream of streams.
@@ -104,10 +104,11 @@ It contains filtering functions that reflect the state of subscriptions at the t
 
 ### Pump the master-source
 
-The current code (with subscriptions from as written) does not trigger a start of the master-source (which probably means that the code above or the code in subscriptions-filtere is improperly written).
+The current code (with subscriptions as written) does not trigger a start of the master-source (which probably means that the code above or the code in subscriptions-filtere is improperly written).
 We're initiating it manually here.
 
       master_source
+      .tap (v) -> console.log 'master_source', v
       .drain()
       .then ->
         console.log 'Master Source terminated.'

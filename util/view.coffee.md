@@ -2,14 +2,9 @@ CouchDB view as a stream of `row`
 ---------------
 
     view_as_stream = (db_uri,app,view,key,endkey) ->
-      view_uri_as_stream view_as_uri db_uri, app, view, key, endkey
 
-    view_uri_as_stream = (url) ->
-      r = oboe_stream 'rows.*', n = oboe {url}
-      n.node 'rows.*', oboe.drop
-      r
+      uri = "#{db_uri}/_design/#{app}/_view/#{view}"
 
-    view_as_uri = (db_uri,app,view,key,endkey) ->
       params =
         reduce: false
 
@@ -20,6 +15,17 @@ CouchDB view as a stream of `row`
         else
           params.key = JSON.stringify key
 
-      "#{db_uri}/_design/#{app}/_view/#{view}?#{qs.stringify params}"
+      n = oboe_stream_request url:uri,qs:params
 
-    module.exports = {view_as_stream,view_as_uri,view_uri_as_stream}
+      n.start -> console.log 'START'
+      n.fail (e) -> console.log 'FAIL', e
+
+      r = oboe_stream 'rows.*', n
+      n.node 'rows.*', -> oboe.drop
+      r
+
+    oboe_stream = require 'joly-fish/util/oboe-as-stream'
+    oboe = require 'oboe'
+    request = require 'request'
+    oboe_stream_request = (require 'oboe-stream-request') oboe, request
+    module.exports = view_as_stream

@@ -1,6 +1,11 @@
 CouchDB back-end
 ----------------
 
+TBD: attachments
+
+- `db` and `db_uri` refer to the same database.
+- `all_map`, `app`, `view` refer to the same view.
+
     couchdb_backend = (db,db_uri,all_map,app,view) ->
 
       semantic =
@@ -29,13 +34,17 @@ CouchDB back-end
           .delete _id: message.id, _rev: message.rev
           .catch -> yes
 
+Document changes
+
       changes = all_changes db
         .multicast()
 
-The following changeset for wandering-country-view/all
+Changeset for wandering-country-view/all
 
-      views_changes = changes_view all_map, changes
+      view_changes = changes_view all_map, changes
         .multicast()
+
+The backend return a function that can be provided to `backend_join`.
 
       (clients_sources,clients_sources_subscriptions) ->
 
@@ -58,45 +67,63 @@ For now the code (above) does single GET/PUT on updates.
 
 For `subscribe` events it will GET the document and send it into the `master_source` (property) and add the monitored id to the list of monitored IDs.
 
-Fetch current value
+        subscriptions_keys =
+          clients_sources
+          .filter operation 'subscribe'
+          .map Key
+
+Fetch current value, return a message similar to a row from `_all_docs`.
 
         values =
-          clients_sources_subscriptions
-          .map Key
-          .filter is_string
+          subscriptions_keys
+          .filter is_string # Can only retrieve/store string keys
           .map (key) -> db.get(key).catch -> null
           .chain most.fromPromise
           .filter not_null
           .map (doc) ->
-            message =
-              id: doc._id
-              rev: doc._rev
-              doc: doc
+            id: doc._id
+            key: doc._id
+            value: rev: doc._rev
+            doc: doc
 
-The following compute values for wandering-country-view/all
+Compute values for wandering-country-view/all by querying the server-side view.
 
-        views_values =
-          clients_sources_subscriptions
-          .map Key
-          .filter is_string
+        view_values =
+          subscriptions_keys
           .chain (key) ->
             view_as_stream db_uri, app, view, key
+          .tap (v) -> console.log 'view_values', v
+
+The output is the combination of:
 
         most.mergeArray [
+
+- subscriptions to document changes in the database
+
           clients_sources_subscriptions
             .map (subscription) -> subscription changes
             .switch()
+
+- requested documents in the database
+
           values
+
+- subscriptions to changes in the view
+
           clients_sources_subscriptions
-            .map (subscription) -> subscription views_changes
+            .map (subscription) -> subscription view_changes
             .switch()
-          views_values
+
+- requested entries in the view
+
+          view_values
+
         ]
 
     module.exports = couchdb_backend
 
     changes_view = require '../util/changes-view'
-    {view_as_stream} = require '../util/view'
+    view_as_stream = require '../util/view'
     changes_semantic = require '../util/changes-semantic'
     all_changes = require '../util/all-changes'
     {operation,Key,is_string,is_object,not_null,has_key} = require '../util/transducers'
