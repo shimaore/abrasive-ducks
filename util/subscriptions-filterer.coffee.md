@@ -31,9 +31,7 @@ Subscription functions
 
       subscriptions_set source
       .map (set) ->
-        console.log 'subscription: create filtered stream', set
         (stream) ->
-          console.log 'subscription: build stream', set, stream.__name ? stream
           stream
           .filter ({key}) -> key? and set.has key
           .multicast()

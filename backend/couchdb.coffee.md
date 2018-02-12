@@ -92,7 +92,6 @@ Compute values for wandering-country-view/all by querying the server-side view.
           subscriptions_keys
           .chain (key) ->
             view_as_stream db_uri, app, view, key
-          .tap (v) -> console.log 'view_values', v
 
 The output is the combination of:
 

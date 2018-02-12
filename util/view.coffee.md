@@ -17,9 +17,6 @@ CouchDB view as a stream of `row`
 
       n = oboe_stream_request url:uri,qs:params
 
-      n.start -> console.log 'START'
-      n.fail (e) -> console.log 'FAIL', e
-
       r = oboe_stream 'rows.*', n
       n.node 'rows.*', -> oboe.drop
       r
