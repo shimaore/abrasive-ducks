@@ -1,4 +1,4 @@
-    operation = (name) -> ({operation}) -> operation is name
+    operation = (name) -> ({op}) -> op is name
     Value = ({value}) -> value
     Key = ({key}) -> key
     is_string = (v) -> typeof v is 'string'

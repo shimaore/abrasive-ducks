@@ -24,12 +24,10 @@ client_source → (authorize) → client_authorized_source → (join) → client
 
       clients_sources = clients_authorized_sources
         .join().multicast()
-      clients_sources.__name = 'clients_sources'
 
       clients_sources_subscriptions = clients_sources
         .thru subscriptions_filterer
         .multicast()
-      clients_sources_subscriptions.__name = 'clients_sources_subscriptions'
 
 Each back-end proxy will 'observe' the `clients_sources` stream and apply its changes.
 
@@ -38,7 +36,6 @@ Each back-end proxy will 'observe' the `clients_sources` stream and apply its ch
       backend_sources = most.fromEvent 'backend join', sources_bus
 
       master_source = backend_sources.join().multicast()
-      master_source.__name = 'master_source'
 
 ### Client join
 
@@ -54,7 +51,6 @@ The client-policy is applied both to messages from the client and to messages to
           .multicast()
 
         client_authorized_source = apply_client_policy_to client_source, 'client_authorized_source'
-        client_authorized_source.__name = "authorized-source of #{client_source.__name}"
 
         sources_bus.emit 'client join', client_authorized_source
 
@@ -85,10 +81,8 @@ It contains filtering functions that reflect the state of subscriptions at the t
         subscribed = client_subscriptions
           .map (subscription) -> subscription master_source
           .switch()
-        subscribed.__name = "subscribed of #{client_source.__name}"
 
         client_sink = apply_client_policy_to subscribed, 'client_sink'
-        client_sink.__name = "client-sink of #{client_source.__name}"
 
         return client_sink
 

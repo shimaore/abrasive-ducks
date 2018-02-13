@@ -1,6 +1,10 @@
 Datastream server for CCNQ4
 ---------------------------
 
+
+Motivation
+----------
+
 This server intends to be a replacement for the `spicy-action` server and provide access to the system datastreams in the following way:
 
 - A datastream from a client might suggest operations:

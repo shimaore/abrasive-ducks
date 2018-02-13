@@ -1,7 +1,8 @@
 CouchDB back-end
 ----------------
 
-TBD: attachments
+TBD / FIXME : attachments
+TBD / FIXME : only handle known record types ?
 
 - `db` and `db_uri` refer to the same database.
 - `all_map`, `app`, `view` refer to the same view.
@@ -58,7 +59,7 @@ The semantic really is 'UPDATE', not 'OVERWRITE'
 For now the code (above) does single GET/PUT on updates.
 
         route = clients_sources
-          .filter operation 'update'
+          .filter operation UPDATE
           .thru changes_semantic
 
         route.create.forEach semantic.create
@@ -69,8 +70,10 @@ For `subscribe` events it will GET the document and send it into the `master_sou
 
         subscriptions_keys =
           clients_sources
-          .filter operation 'subscribe'
+          .filter operation SUBSCRIBE
           .map Key
+
+No action is needed for `unsubscribe` events.
 
 Fetch current value, return a message similar to a row from `_all_docs`.
 
@@ -81,6 +84,7 @@ Fetch current value, return a message similar to a row from `_all_docs`.
           .chain most.fromPromise
           .filter not_null
           .map (doc) ->
+            op: NOTIFY
             id: doc._id
             key: doc._id
             value: rev: doc._rev
@@ -128,3 +132,4 @@ The output is the combination of:
     {operation,Key,is_string,is_object,not_null,has_key} = require '../util/transducers'
     subscriptions_filterer = require '../util/subscriptions-filterer'
     most = require 'most'
+    {UPDATE,SUBSCRIBE,UNSUBSCRIBE} = require 'red-rings/operations'

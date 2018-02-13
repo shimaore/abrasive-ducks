@@ -5,8 +5,8 @@ Subscription functions
 
       subscriptions = new Set()
 
-      sub = source.filter operation 'subscribe'
-      unsub = source.filter operation 'unsubscribe'
+      sub = source.filter operation SUBSCRIBE
+      unsub = source.filter operation UNSUBSCRIBE
 
       adder = (stream) ->
         stream
@@ -40,3 +40,4 @@ Subscription functions
 
     most = require 'most'
     {operation,not_null,Key} = require './transducers'
+    {SUBSCRIBE,UNSUBSCRIBE} = require 'red-rings/operations'
