@@ -21,6 +21,7 @@
     "oboe": "^2.1.4",
     "oboe-as-stream": "^1.0.0",
     "oboe-stream-request": "^1.0.0",
+    "red-rings": "^1.0.0",
     "request": "^2.83.0",
     "windy-moon": "^4.3.0"
   },

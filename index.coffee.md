@@ -4,7 +4,7 @@ Core server
     most = require 'most'
     {EventEmitter2} = require 'eventemitter2'
 
-    core = (limit) ->
+    core = (limit = most.never() ) ->
 
       sources_bus = new EventEmitter2
 
