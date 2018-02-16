@@ -21,7 +21,7 @@ CouchDB view as a stream of `row`
       n.node 'rows.*', -> oboe.drop
       r
 
-    oboe_stream = require 'joly-fish/util/oboe-as-stream'
+    oboe_stream = require 'oboe-as-stream'
     oboe = require 'oboe'
     request = require 'request'
     oboe_stream_request = (require 'oboe-stream-request') oboe, request
