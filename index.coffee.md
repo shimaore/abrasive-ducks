@@ -4,7 +4,7 @@ Core server
     most = require 'most'
     {EventEmitter2} = require 'eventemitter2'
 
-    core = ->
+    core = (limit) ->
 
       sources_bus = new EventEmitter2
 
@@ -19,6 +19,7 @@ client_source → (authorize) → client_authorized_source → (join) → client
 `clients_authorized_sources` is a higher-order stream of all client sources
 
       clients_authorized_sources = most.fromEvent 'client join', sources_bus
+        .until limit
 
 `clients_sources` is the master stream containing all requests from all client sources
 
@@ -34,6 +35,7 @@ Each back-end proxy will 'observe' the `clients_sources` stream and apply its ch
 ### Master bus (from the backends)
 
       backend_sources = most.fromEvent 'backend join', sources_bus
+        .until limit
 
       master_source = backend_sources.join().multicast()
 
