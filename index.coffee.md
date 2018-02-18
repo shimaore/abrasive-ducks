@@ -4,64 +4,54 @@ Core server
     most = require 'most'
     {EventEmitter2} = require 'eventemitter2'
 
-    core = (limit = most.never() ) ->
+    deny_all = (s) -> s.filter -> false
+    allow_all = (s) -> s
+
+    apply_policy = (remote_policy,source) ->
+      remote_policy
+      .map (policy) -> policy source
+      .switch()
+      .multicast()
+
+    core = (limit = most.never()) ->
 
       sources_bus = new EventEmitter2
 
 ### Master bus (from the clients)
 
-The (unfiltered) datastream from the client is `client_source`.
+The (unfiltered) datastream from the client is the `source`.
 
 ```
-client_source → (authorize) → client_authorized_source → (join) → client_sources
+source → (authorize) → authorized_source → (join) → master_source
 ```
 
-`clients_authorized_sources` is a higher-order stream of all client sources
+`authorized_sources` is a higher-order stream of all sources as they appear
 
-      clients_authorized_sources = most.fromEvent 'client join', sources_bus
+      authorized_sources = most.fromEvent 'join', sources_bus
         .until limit
 
-`clients_sources` is the master stream containing all requests from all client sources
+`sources` is the master stream containing all requests from all sources
 
-      clients_sources = clients_authorized_sources
+      master_source = authorized_sources
         .join().multicast()
 
-      clients_sources_subscriptions = clients_sources
-        .thru subscriptions_filterer
-        .multicast()
+### client join
 
-Each back-end proxy will 'observe' the `clients_sources` stream and apply its changes.
+The remote-policy is a stream of policy functions (maybe just one) that apply to that source.
+The remote-policy is applied both to messages from the client and to messages towards the client.
 
-### Master bus (from the backends)
+      client_join = (remote_source,remote_policy = most.just deny_all) ->
 
-      backend_sources = most.fromEvent 'backend join', sources_bus
-        .until limit
+        authorized_source = apply_policy remote_policy, remote_source
 
-      master_source = backend_sources.join().multicast()
+        sources_bus.emit 'join', authorized_source
 
-### Client join
+#### Sink
 
-The client-policy is a stream of policy functions (maybe just one) that apply to that client-source.
-The client-policy is applied both to messages from the client and to messages towards the client.
-
-      client_join = (client_source,client_policy) ->
-
-        apply_client_policy_to = (source,why) ->
-          client_policy
-          .map (policy) -> policy source
-          .switch()
-          .multicast()
-
-        client_authorized_source = apply_client_policy_to client_source, 'client_authorized_source'
-
-        sources_bus.emit 'client join', client_authorized_source
-
-#### Client Sink
-
-The datastream sent to the client is `client_sink`.
+The datastream sent to the client is the `sink`.
 
 ```
-master_source → (subscriptions) → subscribed → (authorize) → client_sink
+master_source → (subscriptions) → subscribed → (authorize) → sink
 ```
 
 To build the client sink we need access to:
@@ -71,31 +61,36 @@ To build the client sink we need access to:
 (Note that for now we work with a naive implementation, we do
 the heavy-lifting of the subscriptions from a single master stream.)
 
-The `client_subscriptions` stream is built from the (authorized) subscriptions received from the client.
+The `subscriptions` stream is built from the (authorized) subscriptions received from the client.
 It contains filtering functions that reflect the state of subscriptions at the time they are emitted.
 
-        client_subscriptions = client_authorized_source
+        subscriptions = authorized_source
           .thru subscriptions_filterer
 
-`client_policy` is a stream of policy functions (for the given client)
-`client_subscriptions` is a stream of subscription functions, which is mapped to a stream of streams.
+`remote_policy` is a stream of policy functions (for the given client)
+`subscriptions` is a stream of subscription functions, which is mapped to a stream of streams.
 
-        subscribed = client_subscriptions
+        subscribed = subscriptions
           .map (subscription) -> subscription master_source
           .switch()
 
-        client_sink = apply_client_policy_to subscribed, 'client_sink'
+        remote_sink = apply_policy remote_policy, subscribed
 
-        return client_sink
+        return remote_sink
 
 ### Backend join
 
-      backend_join = (fn) ->
+`fn = (sink) -> source` (where sink is "from client" and source is "towards client")
 
-        backend_source = fn clients_sources, clients_sources_subscriptions
+      backend_join = (fn,remote_policy = most.just allow_all) ->
 
-        sources_bus.emit 'backend join', backend_source
+        remote_sink = apply_policy remote_policy, master_source
 
+        remote_source = fn remote_sink
+
+        authorized_source = apply_policy remote_policy, remote_source
+
+        sources_bus.emit 'join', authorized_source
         return
 
 ### Pump the master-source
