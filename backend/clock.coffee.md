@@ -1,10 +1,10 @@
 This really is a toy for demonstration purposes.
 
     clock_backend = (period) ->
-      (clients_sources) ->
-        # subscriptions = subscriptions_filterer clients_sources.filter (msg) -> msg.key is 'clock'
+      (sources) ->
         most
-          .constant {key:'clock'}, most.periodic period
+          .constant {op:NOTIFY,key:'clock'}, most.periodic period
 
     most = require 'most'
+    {NOTIFY} = require 'red-rings/operations'
     module.exports = clock_backend

@@ -14,15 +14,10 @@
   "author": "Stéphane Alnet <stephane@shimaore.net> (https://stephane.shimaore.net/)",
   "license": "Unlicense",
   "dependencies": {
-    "@most/create": "^2.0.1",
-    "concat-stream": "^1.6.0",
+    "abrasive-ducks-transducers": "^1.0.0",
     "eventemitter2": "^5.0.1",
     "most": "^1.7.2",
-    "oboe": "^2.1.4",
-    "oboe-as-stream": "^1.0.0",
-    "oboe-stream-request": "^1.0.0",
-    "red-rings": "^1.0.0",
-    "request": "^2.83.0",
+    "red-rings": "^1.1.0",
     "windy-moon": "^4.3.0"
   },
   "devDependencies": {

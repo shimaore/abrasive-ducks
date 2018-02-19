@@ -40,7 +40,7 @@ source → (authorize) → authorized_source → (join) → master_source
 The remote-policy is a stream of policy functions (maybe just one) that apply to that source.
 The remote-policy is applied both to messages from the client and to messages towards the client.
 
-      client_join = (remote_source,remote_policy = most.just deny_all) ->
+      frontend_join = (remote_source,remote_policy = most.just deny_all) ->
 
         authorized_source = apply_policy remote_policy, remote_source
 
@@ -106,7 +106,7 @@ We're initiating it manually here.
       .catch (error) ->
         console.log 'Master Source failed', error
 
-      return {client_join,backend_join}
+      return {frontend_join,backend_join}
 
     module.exports = core
     subscriptions_filterer = require './util/subscriptions-filterer'
