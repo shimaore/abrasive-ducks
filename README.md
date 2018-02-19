@@ -31,11 +31,11 @@ Message format
 The message format is built so that data coming from CouchDB views can be easily exported.
 
 - `.op` — `update`, `subscribe`, `unsubscribe`, `notify` — these are defined in the `red-rings` project.
-- `.key` — (required for `subscribe`, `unsubscribe`, `notify`) the filtering key
+- `.key` — (required for `subscribe`, `unsubscribe`, `notify`) the filtering key (usually a string, but could be an object, array, …)
 
 The above two fieds really are the only ones required for this module to works. The following conventions are adopted in conjunction with the red-rings modules, and follow closely from the CCNQ4 and CouchDB specifications:
 
-- `.id` (required for `update`, may be present in `notify`) — document unique ID, in the form `<type>:<key>`, where `type` must be one of the predefined types
+- `.id` (required for `update`, may be present in `notify`) — document unique ID, in the form `<type>:<key>`, where `type` must be one of the predefined types (always a string)
 - `.rev` (required for `update`) — document sequence; treated essentially as opaque, allows recipients to keep track of the last (or last N) revisions for a document and know this one is different.
 - `.value` (possible for `notify`) — the value emitted by a view, all-docs, etc.
 - `.doc` (possible for `update` and `notify`) — this might be a document's content (for `notify` messages), or a shortcut for `.operations`, where each field indicates a basic `set` operation (for `update` messages);
