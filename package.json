@@ -4,7 +4,7 @@
   "description": "datastream server for CCNQ4",
   "main": "index.js",
   "scripts": {
-    "prepublishOnly": "coffee -c *.coffee.md */*.coffee.md",
+    "prepublishOnly": "npm install --only=dev && rm -f package-lock.json && coffee -c *.coffee.md */*.coffee.md",
     "test": "mocha"
   },
   "repository": {
