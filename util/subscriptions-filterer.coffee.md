@@ -16,7 +16,6 @@ Since we (currently) do not have a Set that allows for deepEqual on values, we m
       .map (set) ->
         (stream) ->
           stream
-          .tap ({key}) -> console.log 'filtering', key, set
           .filter ({key}) -> key? and set.has key_to_string key
           .multicast()
 
