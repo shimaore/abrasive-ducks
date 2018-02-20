@@ -18,7 +18,7 @@ By default the set is empty, and all keys are forwarded.
 
 The backend might subscribe to indidual keys.
 
-            return true if set,has key
+            return true if set.has key
 
 The backend might also subscribe to `<type>:*`, which forwards all keys starting with `<type>:` (types can only contain letters, digits, underscore, or dash).
 
