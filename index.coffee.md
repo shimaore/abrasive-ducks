@@ -99,7 +99,6 @@ The current code (with subscriptions as written) does not trigger a start of the
 We're initiating it manually here.
 
       master_source
-      .tap (v) -> console.log 'master_source', v
       .drain()
       .then ->
         console.log 'Master Source terminated.'
