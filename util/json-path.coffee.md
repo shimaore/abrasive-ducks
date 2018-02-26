@@ -3,6 +3,8 @@ JSON-path manipulators
 
 This library is meant to be used inside Node.js or CouchDB `_update` functions etc. to update a document using a series of commands.
 
+
+    FIXME  Use Immutable instead
     deepEqual = require 'windy-moon/deepEqual'
 
     operations =
@@ -63,12 +65,15 @@ Splice an array
         a.splice start,count,rep...
         return true
 
+    FIXME move json-path to red-rings-path or something like that
+    FIXME export this function to module
     json_path_to_strings = (path) ->
       reg = /([^\.\"\[\]]+)\.?|\"([^"]+)\"\.?|\[([^\]]+)\]\.?/y
       reg.lastIndex = 0
       while $ = path.match reg
         $[1] ? $[2] ? $[3]
 
+    FIXME export this function to module
     default_forbidden_names = new Set [
       '_id'
       '_rev'
@@ -85,6 +90,7 @@ Splice an array
         console.error "Missing arguments"
         return false
 
+      FIXME Use Immutable and path is always a List (which means the original `.operations` should be able to use List as keys and therefor be reworked) (and therefor that the policies will handle operations one-by-one to establish their semantics, and that a single msg may specify ambiguous changes… but I guess that was already the case)
       if Array.isArray path
         strings = path
       else
