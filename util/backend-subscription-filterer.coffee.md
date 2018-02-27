@@ -9,7 +9,8 @@ This is a helper for backend modules (especially ones that only implement transp
       .map (set) ->
         (stream) ->
           stream
-          .filter ({key}) ->
+          .filter (msg) ->
+            key = Key msg
             return false unless key?
 
 By default the set is empty, and all keys are forwarded.
@@ -30,3 +31,6 @@ If at least one type or individual key is subscribed to, then only messages with
           .multicast()
 
     module.exports = subscriptions_filterer
+
+    {Key} = require 'abrasive-ducks-transducers'
+    subscriptions_set = require './subscriptions-set.coffee.md'
