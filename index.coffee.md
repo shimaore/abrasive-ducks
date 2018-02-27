@@ -13,7 +13,7 @@ Core server
       .switch()
       .multicast()
 
-    core = (limit = most.never()) ->
+    core = (fromJS,limit = most.never()) ->
 
       sources_bus = new EventEmitter2
 
@@ -41,6 +41,8 @@ The remote-policy is a stream of policy functions (maybe just one) that apply to
 The remote-policy is applied both to messages from the client and to messages towards the client.
 
       frontend_join = (remote_source,remote_policy = most.just deny_all) ->
+
+        remote_source = remote_source.map fromJS
 
         authorized_source = apply_policy remote_policy, remote_source
 
@@ -87,6 +89,8 @@ It contains filtering functions that reflect the state of subscriptions at the t
         remote_sink = apply_policy remote_policy, master_source
 
         remote_source = fn remote_sink
+
+        remote_source = remote_source.map fromJS
 
         authorized_source = apply_policy remote_policy, remote_source
 

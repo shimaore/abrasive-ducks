@@ -1,6 +1,6 @@
     subscriptions_set = (source) ->
 
-      subscriptions = new Set()
+      subscriptions = Immutable.Set()
 
       sub = source.filter operation SUBSCRIBE
       unsub = source.filter operation UNSUBSCRIBE

@@ -1,7 +1,7 @@
 Changes Semantic(s)
 ===================
 
-Analyzes what operatio was realized on the record/document by injecting a message in at most one of `.create`, `.update` or `.delete`.
+Analyzes what operation was realized on the record/document by injecting a message in at most one of `.create`, `.update` or `.delete`.
 
     changes_semantic = (stream) ->
 
