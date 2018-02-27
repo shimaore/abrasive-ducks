@@ -14,16 +14,7 @@ Core server
       .switch()
       .multicast()
 
-    default_reviver = (key,value) ->
-      if Immutable.isKeyed value
-        value.toMap()
-      else
-        value.toList()
-
-    core = (reviver = default_reviver,limit = most.never()) ->
-
-      fromJS = (msg) ->
-        Immutable.fromJS msg, reviver
+    core = (fromJS = Immutable.fromJS,limit = most.never()) ->
 
       sources_bus = new EventEmitter2
 
