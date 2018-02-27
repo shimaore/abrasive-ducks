@@ -15,4 +15,4 @@ Subscription functions
     module.exports = subscriptions_filterer
 
     {Key} = require 'abrasive-ducks-transducers'
-    subscriptions_set = require './subscriptions-set.coffee.md'
+    subscriptions_set = require './subscriptions-set'

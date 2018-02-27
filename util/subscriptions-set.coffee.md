@@ -8,13 +8,13 @@
       adder = (stream) ->
         stream
         .filter not_null
-        .tap (key) -> subscriptions.add key
+        .tap (key) -> subscriptions = subscriptions.add key
         .map -> subscriptions
 
       deleter = (stream) ->
         stream
         .filter not_null
-        .tap (key) -> subscriptions.delete key
+        .tap (key) -> subscriptions = subscriptions.delete key
         .map -> subscriptions
 
       streams = [
