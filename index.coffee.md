@@ -3,6 +3,7 @@ Core server
 
     most = require 'most'
     {EventEmitter2} = require 'eventemitter2'
+    Immutable = require 'immutable'
 
     deny_all = (s) -> s.filter -> false
     allow_all = (s) -> s
@@ -13,7 +14,16 @@ Core server
       .switch()
       .multicast()
 
-    core = (fromJS,limit = most.never()) ->
+    default_reviver = (key,value) ->
+      if Immutable.isKeyed value
+        value.toMap()
+      else
+        value.toList()
+
+    core = (reviver = default_reviver,limit = most.never()) ->
+
+      fromJS = (msg) ->
+        Immutable.fromJS msg, reviver
 
       sources_bus = new EventEmitter2
 
