@@ -30,7 +30,7 @@ If at least one type or individual key is subscribed to, then only messages with
 
           .multicast()
 
-    module.exports = subscriptions_filterer
+    module.exports = backend_subscriptions_filterer
 
     {Key} = require 'abrasive-ducks-transducers'
     subscriptions_set = require './subscriptions-set.coffee.md'

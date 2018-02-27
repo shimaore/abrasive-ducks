@@ -27,5 +27,6 @@
     module.exports = subscriptions_set
 
     most = require 'most'
+    Immutable = require 'immutable'
     {operation,not_null,Key} = require 'abrasive-ducks-transducers'
     {SUBSCRIBE,UNSUBSCRIBE} = require 'red-rings/operations'

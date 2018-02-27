@@ -18,7 +18,7 @@
     "abrasive-ducks-transducers": "^2.0.0",
     "eventemitter2": "^5.0.1",
     "immutable": "^4.0.0-rc.9",
-    "most": "^1.7.2",
+    "most": "^1.7.3",
     "red-rings": "^1.1.0",
     "windy-moon": "^4.3.0"
   },
