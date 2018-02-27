@@ -1,6 +1,6 @@
 {
   "name": "abrasive-ducks",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "datastream server for CCNQ4",
   "main": "index.js",
   "scripts": {
