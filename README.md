@@ -1,7 +1,7 @@
 Datastream routing engine for CCNQ4
 -----------------------------------
 
-This module implements a core message/datastream routing engine for CCNQ4 (based on `most.js` streams). It provides opinionated options for message-passing authorization.
+This module implements a core message/datastream routing engine for CCNQ4 (based on `immutable` `most.js` streams). It provides opinionated options for message-passing authorization.
 
 Motivation
 ----------
@@ -36,18 +36,18 @@ The message format is built so that data coming from CouchDB views can be easily
 The above two fieds really are the only ones required for this module to work. The following conventions are adopted in conjunction with the red-rings modules, and follow closely from the CCNQ4 and CouchDB specifications:
 
 - `.id` (required for `update`, may be present in `notify`) — document unique ID, in the form `<type>:<key>`, where `type` must be one of the predefined types (always a string).
-- `.rev` (required for `update`, may be present in `notify`) — document sequence; treated essentially as opaque, allows recipients to keep track of the last (or last N) revisions for a document and know this one is different.
-- `.value` (possible for `notify`) — the value emitted by a view, all-docs, etc.
+- `.rev` (may be present in `update` and `notify`) — document sequence; treated essentially as opaque, allows recipients to keep track of the last (or last N) revisions for a document and know this one is different.
+- `.value` (possible for `notify`) — the value emitted by a view.
 - `.doc` (possible for `update` and `notify`) — this might be a document's content (for `notify` messages); or a shortcut for `.operations`, where each field indicates a basic `set` operation (for `update` messages);
 - `.operations` (possible only in `update`) — operations on the existing revision of a document.
 
-The difference between `.id` and `.key`, and between `.doc` and `.value`, are references to the CouchDB view system and hold the same semantics.
+The difference between `.id` and `.key`, and between `.doc` and `.value`, are references to the CouchDB view system and hold the same semantics. (The `.id` is unique and the key for `.doc`; the `.key` might be repeated, even for the same document, and is generated alongside a `.value`.)
 
 The `.operations` field is an addition of this specification (see below), while the interpretation of `.doc` as a set of updates (instead of a value) is also an addition of this specification.
 
 Other fields might be defined, although best practices would suggest that any `.id`-related data should be provided in the `.doc` object. (In other words, fields at the root of the message object should be metadata about the message itself, while payload content is carried in `.doc` or `.value` in most cases, except for complex transformations carried in `.operations`.)
 
-(In NodeRED for example the `.doc` / `.value` convention is equivalent to the `.payload` convention. `.doc` is kept because of the CouchDB background but could easily be translated into `.payload` at the boundaries of a NodeRED system.)
+(In other words the `.doc` / `.value` convention is similar to the `.payload` convention in Node-RED.)
 
 Update operations
 -----------------
