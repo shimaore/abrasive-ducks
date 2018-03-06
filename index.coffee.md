@@ -103,14 +103,15 @@ It contains filtering functions that reflect the state of subscriptions at the t
 The current code (with subscriptions as written) does not trigger a start of the master-source (which probably means that the code above or the code in subscriptions-filtere is improperly written).
 We're initiating it manually here.
 
-      master_source
+      status = master_source
       .drain()
       .then ->
         console.log 'Master Source terminated.'
       .catch (error) ->
         console.log 'Master Source failed', error
+        Promise.reject error
 
-      return {frontend_join,backend_join}
+      return {frontend_join,backend_join,status}
 
     module.exports = core
     subscriptions_filterer = require './util/subscriptions-filterer'
