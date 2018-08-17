@@ -15,11 +15,11 @@
   "author": "Stéphane Alnet <stephane@shimaore.net> (https://stephane.shimaore.net/)",
   "license": "Unlicense",
   "dependencies": {
-    "abrasive-ducks-transducers": "^2.0.0",
+    "abrasive-ducks-transducers": "^2.1.2",
     "eventemitter2": "^5.0.1",
     "immutable": "^4.0.0-rc.9",
     "most": "^1.7.3",
-    "red-rings": "^1.1.2",
+    "red-rings": "^2.0.0",
     "windy-moon": "^4.3.0"
   },
   "devDependencies": {
